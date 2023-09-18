@@ -106,7 +106,7 @@ describe('specMergins', () => {
           in: 'query',
           name: 'date',
           required: true,
-          schema: { format: 'date-time', type: 'string', default: undefined, items: undefined, enum: undefined },
+          schema: { format: 'date-time', type: 'string', default: undefined },
         },
         addedParameter,
       ]);

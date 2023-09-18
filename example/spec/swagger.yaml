@@ -1,0 +1,67 @@
+components:
+  examples: {}
+  headers: {}
+  parameters: {}
+  requestBodies: {}
+  responses: {}
+  schemas:
+    DateFilter:
+      properties:
+        gte:
+          type: string
+          format: date-time
+        lte:
+          type: string
+          format: date-time
+      type: object
+      additionalProperties: false
+    TestFilter:
+      properties:
+        id:
+          anyOf:
+            - type: string
+            - items:
+                type: string
+              type: array
+        date:
+          $ref: '#/components/schemas/DateFilter'
+      type: object
+      additionalProperties: false
+  securitySchemes: {}
+info:
+  title: tsoa-example
+  version: 1.0.0
+  description: 'Testing TSOA'
+  license:
+    name: MIT
+  contact: {}
+openapi: 3.0.0
+paths:
+  /store/test:
+    get:
+      operationId: Test
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestFilter'
+      security: []
+      parameters:
+        - in: query
+          name: id
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - items:
+                  type: string
+                type: array
+        - in: query
+          name: date
+          required: false
+          schema:
+            $ref: '#/components/schemas/DateFilter'
+servers:
+  - url: /

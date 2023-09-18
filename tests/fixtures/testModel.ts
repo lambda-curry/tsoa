@@ -463,6 +463,17 @@ export interface UserResponseModel {
   name: string;
 }
 
+export class DateParameterSubSchema {
+  public gte?: Date;
+  public gt?: Date;
+  public lte?: Date;
+  public lt?: Date;
+}
+export class AdvancedParameterTestModel {
+  public id?: string | string[];
+  public date?: DateParameterSubSchema;
+}
+
 export class ParameterTestModel {
   public firstname!: string;
   public lastname!: string;

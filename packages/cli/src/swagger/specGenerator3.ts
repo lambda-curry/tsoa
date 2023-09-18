@@ -148,7 +148,6 @@ export class SpecGenerator3 extends SpecGenerator {
     const schema: { [name: string]: Swagger.Schema3 } = {};
     Object.keys(this.metadata.referenceTypeMap).map(typeName => {
       const referenceType = this.metadata.referenceTypeMap[typeName];
-
       if (referenceType.dataType === 'refObject') {
         const required = referenceType.properties.filter(p => p.required && !this.hasUndefined(p)).map(p => p.name);
         schema[referenceType.refName] = {
@@ -480,29 +479,34 @@ export class SpecGenerator3 extends SpecGenerator {
   }
 
   private buildParameter(source: Tsoa.Parameter): Swagger.Parameter3 {
+    const schema = this.getSwaggerType(source.type) as Swagger.Schema3;
     const parameter = {
       description: source.description,
       in: source.in,
       name: source.name,
       required: source.required,
       schema: {
+        ...schema,
         default: source.default,
-        format: undefined,
+        format: schema.format ? this.throwIfNotDataFormat(schema.format) : undefined,
+        type: schema.type ? this.throwIfNotDataType(schema.type) : undefined,
       },
     } as Swagger.Parameter3;
     if (source.deprecated) {
       parameter.deprecated = true;
     }
 
-    const parameterType = this.getSwaggerType(source.type);
-    if (parameterType.format) {
-      parameter.schema.format = this.throwIfNotDataFormat(parameterType.format);
-    }
+    // const parameterType = this.getSwaggerType(source.type);
+    // parameter.schema = parameterType as Swagger.Schema;
 
-    if (parameterType.$ref) {
-      parameter.schema = parameterType as Swagger.Schema;
-      return parameter;
-    }
+    // if (parameter.schema.format) {
+    //   parameter.schema.format = this.throwIfNotDataFormat(parameter.schema.format);
+    // }
+
+    // if (parameterType.$ref) {
+    //   parameter.schema = parameterType as Swagger.Schema;
+    //   return parameter;
+    // }
 
     const validatorObjs = {};
     Object.keys(source.validators)
@@ -513,15 +517,15 @@ export class SpecGenerator3 extends SpecGenerator {
         validatorObjs[key] = source.validators[key].value;
       });
 
-    if (source.type.dataType === 'any') {
-      parameter.schema.type = 'string';
-    } else {
-      if (parameterType.type) {
-        parameter.schema.type = this.throwIfNotDataType(parameterType.type);
-      }
-      parameter.schema.items = parameterType.items;
-      parameter.schema.enum = parameterType.enum;
-    }
+    // if (source.type.dataType === 'any') {
+    //   parameter.schema.type = 'string';
+    // } else {
+    //   if (parameterType.type) {
+    //     parameter.schema.type = this.throwIfNotDataType(parameterType.type);
+    //   }
+    //   parameter.schema.items = parameterType.items;
+    //   parameter.schema.enum = parameterType.enum;
+    // }
 
     parameter.schema = Object.assign({}, parameter.schema, validatorObjs);
 

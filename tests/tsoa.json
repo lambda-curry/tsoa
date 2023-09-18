@@ -22,7 +22,7 @@
       }
     },
     "yaml": true,
-    "specVersion": 2
+    "specVersion": 3
   },
   "routes": {
     "basePath": "/v1",

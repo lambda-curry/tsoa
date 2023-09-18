@@ -1,5 +1,5 @@
 import { Body, BodyProp, Get, Header, Path, Post, Query, Request, Route, Res, TsoaResponse, Deprecated, Queries } from '@tsoa/runtime';
-import { Gender, ParameterTestModel } from '../testModel';
+import { AdvancedParameterTestModel, Gender, ParameterTestModel } from '../testModel';
 
 @Route('ParameterTest')
 export class ParameterController {
@@ -94,6 +94,11 @@ export class ParameterController {
       nicknames: queryParams.nicknames,
       weight: queryParams.weight,
     });
+  }
+
+  @Get('AdvancedQueries')
+  public async getAdvancedQueries(@Queries() queryParams: AdvancedParameterTestModel): Promise<AdvancedParameterTestModel> {
+    return Promise.resolve(queryParams);
   }
 
   /**

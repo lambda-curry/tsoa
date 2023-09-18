@@ -437,6 +437,18 @@ export class ParameterGenerator {
       return this.supportPathDataType(parameterType.type);
     }
 
+    if (parameterType.dataType === 'array') {
+      return this.supportPathDataType(parameterType.elementType);
+    }
+
+    if (parameterType.dataType === 'refObject') {
+      return !parameterType.properties.map(p => this.supportPathDataType(p.type)).some(t => t === false);
+    }
+
+    if (parameterType.dataType === 'nestedObjectLiteral') {
+      return !parameterType.properties.map(p => this.supportPathDataType(p.type)).some(t => t === false);
+    }
+
     if (parameterType.dataType === 'union') {
       return !parameterType.types.map(t => this.supportPathDataType(t)).some(t => t === false);
     }
